@@ -34,27 +34,27 @@ app.get('/api/health', async (req, res) => {
 app.get('/ask', async (req, res) => {
     try {
   
-        const llmA = new OpenAI({ modelName: "gpt-3.5-turbo"});
+        const llmA = new OpenAI({ modelName: "gpt-3.5-turbo", temperature: 0.5});
         const chainA = loadQAStuffChain(llmA);
-        const directory = process.env.DIR //saved directory in .env file
+        const directory = '.'
         
         const loadedVectorStore = await FaissStore.load(
           directory,
           new OpenAIEmbeddings()
           );
           
-          const question = "what is this article about?"; //question goes here. 
-          const result = await loadedVectorStore.similaritySearch(question, 1);
+          const question = "find a list of candidates in nodejs and return me the response in json"; 
+          const result = await loadedVectorStore.similaritySearch(question, 3);
+          console.log(result, 'vectorconsole')
           const resA = await chainA.call({
             input_documents: result,
             question,
           });
-          // console.log({ resA });
-          res.json({ result: resA }); // Send the response as JSON
+          res.json({ result: resA }); 
     } 
       
       catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' }); // Send an error response
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   });

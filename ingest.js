@@ -1,5 +1,6 @@
 import { OpenAI } from "langchain/llms/openai";
-import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+// import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { CSVLoader } from 'langchain/document_loaders/fs/csv'
 import { FaissStore } from "langchain/vectorstores/faiss";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
@@ -10,7 +11,7 @@ dotenv.config()
 
 
 export const ingestDocs = async () => {
-    const loader = new PDFLoader('sample.pdf')
+    const loader = new CSVLoader('sample_1.csv')
     const docs = await loader.load()
     console.log('docs have been loaded')
 
@@ -27,6 +28,6 @@ export const ingestDocs = async () => {
     const directory = "/Users/saurabh/codebag/privateGPT/";
     await vectorStore.save(directory);
     console.log('saved!')
-    
+
 }
 ingestDocs()
